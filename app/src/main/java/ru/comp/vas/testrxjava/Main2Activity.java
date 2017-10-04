@@ -9,22 +9,21 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.cantrowitz.rxbroadcast.RxBroadcast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.Observable;
-import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 public class Main2Activity extends AppCompatActivity {
@@ -41,6 +40,14 @@ public class Main2Activity extends AppCompatActivity {
 
     @BindView(R.id.tv_receiver)
     TextView mReceiverTextView;
+
+    @BindView(R.id.tv_text_from_edittext)
+    TextView mTextFormEditText;
+
+    @BindView(R.id.et_text)
+    EditText mEditText;
+
+
 
     private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
@@ -126,6 +133,26 @@ public class Main2Activity extends AppCompatActivity {
                                 Throwable::printStackTrace,
                                 this::printLine
                         )
+        );
+
+
+        mCompositeDisposable.add(RxEditTextObservable.getRxEditTextObservable(mEditText)
+                .doOnNext(s -> Log.i(TAG, s))
+                .map(s -> {
+                    if (!s.equals("")) return s;
+                    else return "Android";
+                })
+                .map(s -> s + " - VVV")
+                .doOnNext(s -> Log.i(TAG, s))
+                .map(s -> s.replace(" ", ""))
+                .filter(s -> !s.contains("ccc"))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        mTextFormEditText::setText,
+                        Throwable::printStackTrace,
+                        this::printLine
+                )
         );
 
     }
