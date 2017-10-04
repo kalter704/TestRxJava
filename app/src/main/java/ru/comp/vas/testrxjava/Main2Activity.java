@@ -1,5 +1,7 @@
 package ru.comp.vas.testrxjava;
 
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -9,6 +11,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.cantrowitz.rxbroadcast.RxBroadcast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,10 +31,16 @@ public class Main2Activity extends AppCompatActivity {
 
     private final String TAG = "main2_activity";
 
-    private static int count = 0;
+    private final String INTENT_FILTER_STRING = "ru.vas.my.broadcast.receiver.temp784512";
+    private final String EXTRA_NUMBER = "extra_number";
+
+    private int count = 0;
 
     @BindView(R.id.tv_count)
     TextView mCountTextView;
+
+    @BindView(R.id.tv_receiver)
+    TextView mReceiverTextView;
 
     private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
@@ -57,7 +67,7 @@ public class Main2Activity extends AppCompatActivity {
 
         Log.i(TAG, "Start Main2Activity");
 
-        writeLine();
+        printLine();
 
         mCompositeDisposable.add(
                 getNumbers()
@@ -67,7 +77,7 @@ public class Main2Activity extends AppCompatActivity {
                         .subscribe(
                                 s -> Log.i(TAG, s),
                                 Throwable::printStackTrace,
-                                this::writeLine
+                                this::printLine
                         )
         );
 
@@ -77,10 +87,10 @@ public class Main2Activity extends AppCompatActivity {
                         .subscribe(
                                 s -> Log.i(TAG, s),
                                 Throwable::printStackTrace,
-                                this::writeLine)
+                                this::printLine)
         );
 
-        writeLine();
+        printLine();
 
         mCompositeDisposable.add(
                 getUrls()
@@ -91,7 +101,7 @@ public class Main2Activity extends AppCompatActivity {
                         .subscribe(
                                 title -> Log.i(TAG, title),
                                 Throwable::printStackTrace,
-                                this::writeLine)
+                                this::printLine)
         );
 
         mCompositeDisposable.add(
@@ -102,13 +112,28 @@ public class Main2Activity extends AppCompatActivity {
                         .subscribe(
                                 s -> Log.i(TAG, s),
                                 Throwable::printStackTrace,
-                                this::writeLine)
+                                this::printLine)
         );
 
-        writeLine();
+        printLine();
+
+        IntentFilter intentFilter = new IntentFilter(INTENT_FILTER_STRING);
+
+        mCompositeDisposable.add(
+                RxBroadcast.fromBroadcast(this, intentFilter)
+                        .subscribe(
+                                this::receiveFormBroadcast,
+                                Throwable::printStackTrace,
+                                this::printLine
+                        )
+        );
 
     }
 
+    private void receiveFormBroadcast(Intent intent) {
+        int num = intent.getIntExtra(EXTRA_NUMBER, -1);
+        mReceiverTextView.setText("Receive: " + String.valueOf(num));
+    }
 
     private Observable<List<String>> getUrls() {
         List<String> l = new ArrayList();
@@ -143,7 +168,7 @@ public class Main2Activity extends AppCompatActivity {
         return Observable.just("one", "two", "three", "four", "five");
     }
 
-    private void writeLine() {
+    private void printLine() {
         String temp = "";
         for (int i = 0; i < 50; ++i) {
             temp += "-";
@@ -153,15 +178,22 @@ public class Main2Activity extends AppCompatActivity {
 
     @OnClick(R.id.btn_click2)
     void clickkk2() {
-        mCountTextView.setText("Click " + String.valueOf(count++));
+        mCountTextView.setText("Click " + String.valueOf(++count));
+    }
+
+    @OnClick(R.id.btn_send)
+    void clickSend() {
+        Intent intent = new Intent(INTENT_FILTER_STRING);
+        intent.putExtra(EXTRA_NUMBER, count);
+        sendBroadcast(intent);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         mCompositeDisposable.dispose();
-        writeLine();
+        printLine();
         Log.i(TAG, "Dispose all");
-        writeLine();
+        printLine();
     }
 }
