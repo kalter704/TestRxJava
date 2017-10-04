@@ -1,10 +1,10 @@
 package ru.comp.vas.testrxjava;
 
-import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.util.Pair;
-import android.support.v4.util.TimeUtils;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -15,8 +15,6 @@ import android.widget.Toast;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.jakewharton.rxbinding2.widget.RxTextView;
 
-import org.reactivestreams.Subscription;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -24,7 +22,6 @@ import java.util.concurrent.TimeUnit;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.Observable;
-import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 
@@ -62,27 +59,6 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState != null) {
             mTextView.setText(savedInstanceState.getString(BUNDLE_TEXT));
         }
-
-//        Observable<String> startObs = RxTextView.textChanges(mEtStart)
-//                .debounce(500, TimeUnit.MILLISECONDS)
-//                .map(s -> s.toString().replace(" ", ""));
-//        Observable<String> endObs = RxTextView.textChanges(mEtEnd)
-//                .debounce(500, TimeUnit.MILLISECONDS)
-//                .map(s -> s.toString().replace(" ", ""));
-//
-//        Observable.combineLatest(
-//                startObs,
-//                endObs,
-//                (s1, s2) -> s1 + ":" + s2)
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(s -> mTextView.setText(s));
-//
-//        Observable.combineLatest(
-//                startObs,
-//                endObs,
-//                (s1, s2) -> notEmpty(s1, s2))
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(b -> mButton.setEnabled(b));
 
         Observable<String> nameObs = RxTextView.textChanges(mEtName)
                 .map(String::valueOf)
@@ -132,22 +108,13 @@ public class MainActivity extends AppCompatActivity {
                         duplicatesCheckObs,
                         equalsPass,
                         (isUniq, isPassEquals) -> isUniq && isPassEquals)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(enable -> mButton.setEnabled(enable))
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(enable -> mButton.setEnabled(enable))
         );
 
         RxView.clicks(mButton)
                 .subscribe(view -> onClickk());
     }
-
-//    private boolean notEmpty(String... strings) {
-//        for(String s : strings) {
-//            if (s.isEmpty()) {
-//                return false;
-//            }
-//        }
-//        return true;
-//    }
 
     private String requestName(String name) {
         try {
@@ -189,6 +156,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mDisposableList.forEach(Disposable::dispose);
+        //mDisposableList.forEach(Disposable::dispose);
+        for (Disposable d : mDisposableList) {
+            d.dispose();
+        }
     }
+
 }
