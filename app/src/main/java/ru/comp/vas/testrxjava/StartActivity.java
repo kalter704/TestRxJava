@@ -41,6 +41,8 @@ public class StartActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        startActivity(new Intent(this, Main2Activity.class));
     }
 
     @Override
