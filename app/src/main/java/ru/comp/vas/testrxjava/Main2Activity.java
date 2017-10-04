@@ -46,6 +46,8 @@ public class Main2Activity extends AppCompatActivity {
 
     @BindView(R.id.et_text)
     EditText mEditText;
+    @BindView(R.id.et_text2)
+    EditText mEditText2;
 
 
 
@@ -150,6 +152,15 @@ public class Main2Activity extends AppCompatActivity {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         mTextFormEditText::setText,
+                        Throwable::printStackTrace,
+                        this::printLine
+                )
+        );
+
+        mCompositeDisposable.add(RxEditTextObservable2.getRxEditTextObservableFrom(mEditText2)
+                .map(s -> " | " + s)
+                .subscribe(
+                        s -> mTextFormEditText.setText(mTextFormEditText.getText() + s),
                         Throwable::printStackTrace,
                         this::printLine
                 )

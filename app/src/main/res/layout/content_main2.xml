@@ -16,7 +16,8 @@
         android:layout_marginTop="32dp"
         android:text="Add"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_count"/>
+        app:layout_constraintTop_toBottomOf="@+id/tv_count"
+        android:layout_marginStart="16dp"/>
 
     <TextView
         android:id="@+id/tv_count"
@@ -28,7 +29,9 @@
         android:layout_marginLeft="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginRight="8dp"
-        app:layout_constraintRight_toRightOf="parent"/>
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"/>
 
     <Button
         android:id="@+id/btn_send"
@@ -38,7 +41,8 @@
         android:layout_marginTop="32dp"
         android:text="Send"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_count"/>
+        app:layout_constraintTop_toBottomOf="@+id/tv_count"
+        android:layout_marginEnd="16dp"/>
 
     <TextView
         android:id="@+id/tv_receiver"
@@ -50,7 +54,9 @@
         android:text="TextView"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_send"/>
+        app:layout_constraintTop_toBottomOf="@+id/btn_send"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"/>
 
     <TextView
         android:id="@+id/tv_text_from_edittext"
@@ -62,11 +68,13 @@
         android:layout_marginLeft="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginRight="8dp"
-        app:layout_constraintRight_toRightOf="parent"/>
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"/>
 
     <EditText
         android:id="@+id/et_text"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
@@ -76,5 +84,20 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_text_from_edittext"
-        app:layout_constraintHorizontal_bias="0.0"/>
+        app:layout_constraintHorizontal_bias="0.0"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"/>
+
+    <EditText
+        android:id="@+id/et_text2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_text"/>
 </android.support.constraint.ConstraintLayout>
